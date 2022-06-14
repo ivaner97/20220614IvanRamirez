@@ -238,9 +238,11 @@ namespace Citas.Context
                     var cita = new Cita();
                     cita.IdCita = Convert.ToInt32(dr["IdCita"].ToString());
                     cita.Fecha = Convert.ToDateTime(dr["Fecha"].ToString());
-                    cita.Hora = dr["Hora"].ToString();
-                    cita.cliente = Convert.ToInt32(dr["IdCliente"].ToString());
-                    cita.medico = Convert.ToInt32(dr["IdMedico"].ToString());
+                    cita.Hora = Convert.ToDateTime(dr["Hora"].ToString());
+                    cita.Idcliente = Convert.ToInt32(dr["IdCliente"].ToString());
+                    cita.Idmedico = Convert.ToInt32(dr["IdMedico"].ToString());
+                    cita.cliente = dr["Cliente"].ToString();
+                    cita.medico = dr["Medico"].ToString();
 
                     CitaList.Add(cita);
                 }
@@ -266,15 +268,49 @@ namespace Citas.Context
                 {
                     cita.IdCita = Convert.ToInt32(dr["IdCita"].ToString());
                     cita.Fecha = Convert.ToDateTime(dr["Fecha"].ToString());
-                    cita.Hora = dr["Hora"].ToString();
-                    cita.cliente = Convert.ToInt32(dr["IdCliente"].ToString());
-                    cita.medico = Convert.ToInt32(dr["IdMedico"].ToString());
+                    cita.Hora = Convert.ToDateTime(dr["Hora"].ToString());
+                    cita.Idcliente = Convert.ToInt32(dr["IdCliente"].ToString());
+                    cita.Idmedico = Convert.ToInt32(dr["IdMedico"].ToString());
+                    cita.cliente = dr["Cliente"].ToString();
+                    cita.medico = dr["Medico"].ToString();
                 }
 
                 con.Close();
             }
 
             return cita;
+        }
+
+        public IEnumerable<Cita> GetCitaFin()
+        {
+            var CitaList = new List<Cita>();
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("SP_GetCitaFin", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    var cita = new Cita();
+                    cita.IdCita = Convert.ToInt32(dr["IdCita"].ToString());
+                    cita.Fecha = Convert.ToDateTime(dr["Fecha"].ToString());
+                    cita.Hora = Convert.ToDateTime(dr["Hora"].ToString());
+                    cita.Idcliente = Convert.ToInt32(dr["IdCliente"].ToString());
+                    cita.Idmedico = Convert.ToInt32(dr["IdMedico"].ToString());
+                    cita.cliente = dr["Cliente"].ToString();
+                    cita.medico = dr["Medico"].ToString();
+                    cita.diagnostico = dr["Diagnostico"].ToString();
+                    cita.estado = Convert.ToInt32(dr["estado"].ToString());
+
+                    CitaList.Add(cita);
+                }
+
+                con.Close();
+            }
+
+            return CitaList;
         }
 
         public void CreateCita(Cita cita)
@@ -286,8 +322,8 @@ namespace Citas.Context
 
                 cmd.Parameters.AddWithValue("@fecha", cita.Fecha);
                 cmd.Parameters.AddWithValue("@hora", cita.Hora);
-                cmd.Parameters.AddWithValue("@cliente", cita.cliente);
-                cmd.Parameters.AddWithValue("@medico", cita.medico);
+                cmd.Parameters.AddWithValue("@cliente", cita.Idcliente);
+                cmd.Parameters.AddWithValue("@medico", cita.Idmedico);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -306,8 +342,8 @@ namespace Citas.Context
                 cmd.Parameters.AddWithValue("@Id", cita.IdCita);
                 cmd.Parameters.AddWithValue("@fecha", cita.Fecha);
                 cmd.Parameters.AddWithValue("@hora", cita.Hora);
-                cmd.Parameters.AddWithValue("@cliente", cita.cliente);
-                cmd.Parameters.AddWithValue("@medico", cita.medico);
+                cmd.Parameters.AddWithValue("@cliente", cita.Idcliente);
+                cmd.Parameters.AddWithValue("@medico", cita.Idmedico);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -332,99 +368,16 @@ namespace Citas.Context
 
         }
 
-         //Diagnostico
-        public IEnumerable<Diagnostico> GetDiagnostico()
-        {
-            var DiagnosticoList = new List<Diagnostico>();
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SP_GetDiagnostico", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    var diagnostico = new Diagnostico();
-                    diagnostico.Id = Convert.ToInt32(dr["Id"].ToString());
-                    diagnostico.CIta = Convert.ToInt32(dr["IdCita"].ToString());
-                    diagnostico.Descripcion = dr["Descripcion"].ToString();
-
-                    DiagnosticoList.Add(diagnostico);
-                }
-
-                con.Close();
-            }
-
-            return DiagnosticoList;
-        }
-
-        public Diagnostico GetDiagnostico(int id)
-        {
-            var diagnostico = new Diagnostico();
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SP_GetDiagnostico", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@Id", id);
-                con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    diagnostico.Id = Convert.ToInt32(dr["Id"].ToString());
-                    diagnostico.CIta = Convert.ToInt32(dr["IdCita"].ToString());
-                    diagnostico.Descripcion = dr["Descripcion"].ToString();
-                }
-
-                con.Close();
-            }
-
-            return diagnostico;
-        }
-
-        public void CreateDiagnostico(Diagnostico diagnostico)
+        public void FinalizarCita(Cita cita)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SP_AddDiagnostico", con);
+                SqlCommand cmd = new SqlCommand("SP_FinCita", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@cita", diagnostico.CIta);
-                cmd.Parameters.AddWithValue("@descripcion", diagnostico.Descripcion);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-
-        }
-
-        public void UpdateDiagnostico(Diagnostico diagnostico)
-        {
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SP_UpdateDiagnostico", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@Id", diagnostico.Id);
-                cmd.Parameters.AddWithValue("@cita", diagnostico.CIta);
-                cmd.Parameters.AddWithValue("@descripcion", diagnostico.Descripcion);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-
-        }
-
-        public void DeleteDiagnostico(int id)
-        {
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SP_DeleteDiagnostico", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Id", cita.IdCita);
+                cmd.Parameters.AddWithValue("@estado", cita.estado);
+                cmd.Parameters.AddWithValue("@diagnostico", cita.diagnostico);
 
                 con.Open();
                 cmd.ExecuteNonQuery();

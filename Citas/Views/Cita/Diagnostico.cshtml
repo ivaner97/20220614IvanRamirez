@@ -1,13 +1,9 @@
-﻿@model IEnumerable<Citas.Models.Cliente>;
-@{ 
+﻿@model IEnumerable<Citas.Models.Cita>;
+@{
     ViewData["Title"] = "Index";
 }
 
-<h2>Lista Clientes</h2>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Agregar</a>
-</p>
+<h2>Citas Finalizadas</h2>
 
 <div class="row">
     <div class="col-md-12">
@@ -21,19 +17,20 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Dui)
+                                @Html.DisplayNameFor(model => model.cliente)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Nombre)
+                                @Html.DisplayNameFor(model => model.medico)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Apellido)
+                                @Html.DisplayNameFor(model => model.Fecha)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Telefono)
+                                @Html.DisplayNameFor(model => model.Hora)
                             </th>
-
-                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.diagnostico)
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,21 +38,19 @@
                         {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Dui)
+                                @Html.DisplayFor(modelItem => item.cliente)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Nombre)
+                                @Html.DisplayFor(modelItem => item.medico)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Apellido)
+                                @Html.DisplayFor(modelItem => item.Fecha)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Telefono)
+                                @Html.DisplayFor(modelItem => item.Hora)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-warning">Editar</a>
-                                <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-danger">Eliminar</a>
-                                <a asp-action="Cliente" asp-controller="Cita" asp-route-id="@item.IdCliente" class="btn btn-primary">Agendar cita</a>
+                                @Html.DisplayFor(modelItem => item.diagnostico)
                             </td>
                         </tr>
                         }

@@ -13,8 +13,8 @@ namespace Citas.Controllers
         DBContext dBContext = new DBContext();
         public IActionResult Index()
         {
-            List<Medico> medicos = dBContext.GetMedico().ToList();
-            return View(medicos);
+            List<Medico> model = dBContext.GetMedico().ToList();
+            return View(model);
         }
 
         public ActionResult Create()

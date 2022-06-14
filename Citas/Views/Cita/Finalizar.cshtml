@@ -1,0 +1,37 @@
+﻿@model Citas.Models.Cita;
+
+@{
+    ViewData["Title"] = "Finalizar";
+}
+
+<h3>Información de cita</h3>
+<p>
+    Cliente: @Model.cliente
+    <br />
+    Medico: @Model.medico
+<br />
+    Fecha: @Model.Fecha.ToShortDateString()
+<br />
+    Hora: @Model.Hora.ToShortTimeString()
+
+</p>
+<hr />
+<h2>Para Finalizar ingrese el diagnostico</h2>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Finalizar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdCita" />
+            <input type="hidden" asp-for="estado" value="1" />
+            <div class="form-group">
+                <label asp-for="diagnostico" class="control-label"></label>
+                <textarea class="form-control" asp-for="diagnostico"></textarea>
+                <span asp-validation-for="diagnostico" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Atrás</a>
+            </div>
+        </form>
+    </div>
+</div>

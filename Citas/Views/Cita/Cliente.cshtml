@@ -1,0 +1,50 @@
+﻿@model Citas.Models.Cita;
+
+@{
+    ViewData["Title"] = "Agregar";
+}
+
+<h2>Nueva Cita</h2>
+<p>
+    Cliente: @Model.cliente
+</p>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Idcliente" />
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" maxlength="50" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Hora" class="control-label"></label>
+                <input asp-for="Hora" class="form-control" maxlength="50" />
+                <span asp-validation-for="Hora" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Idmedico" class="control-label"></label>
+                <select class="form-control" asp-for="Idmedico">
+                    <option value="0">Seleccione medico</option>
+                    @foreach (var item in Model.ListaMedicos)
+                    {
+                        <option value="@item.IdMedico">@(item.Nombre + " " + item.Apellido)</option>
+                    }
+                </select>
+                <span asp-validation-for="Idmedico" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Atrás</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
